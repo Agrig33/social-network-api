@@ -7,12 +7,14 @@ const thoughtShema = new Schema(
         thoughtText: {
             type: String,
             required: true,
-            maxlength: 280,
             minlength: 1,
+            maxlength: 280,
         },
         createdAt: {
             type: Date,
             default: Date.now,
+            get: (createdAtVal) => 
+                moment(createdAtVal).format('MM, DD, YYYY [at] hh:mm'),
         },
         username: {
             type: String,
