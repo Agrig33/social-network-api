@@ -31,8 +31,8 @@ async createThought(req, res) {
         const user = await User.findOneAndUpdate(
             { _id: req.body.userId },
             { $addToSet: { thoughts: thought._id }},
-            { new: true }
-        );
+            { new: true });
+
         if (!user) {
             return res.status(404).json({ message: 'Error, no user found with that ID.'});
         }
@@ -62,8 +62,8 @@ async updateThought(req, res) {
         const thought = await Thought.findOneAndUpdate(
             { _id: req.params.thoughtId },
             { $set: req.body },
-            { runValidators: true, new: true }
-        );
+            { runValidators: true, new: true });
+            
     if (!thought) {
         return res.status(404).json({ message: 'Error, no thought found with that ID.'});
     } 
