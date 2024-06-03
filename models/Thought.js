@@ -11,7 +11,8 @@ const reactionSchema = new Schema(
         reactionBody: {
             type: String,
             required: true,
-            maxlength: 280
+            maxlength: 280,
+            minlength: 1
         },
         username: {
             type: String,
@@ -60,9 +61,9 @@ const thoughtShema = new Schema(
 );
 
 thoughtSchema.virtual('formattedCreatedAt').get(function () {
-    return this.createdAt.toLocaleString();
+    return this.reactions.length;
 });
 
-const Thought = mongoose.model('Thought', thoughtSchema);
+const Thought = mongoose.model('Thought', reactionSchema, thoughtSchema);
 
 module.export = Thought;
