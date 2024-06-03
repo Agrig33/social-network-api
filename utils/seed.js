@@ -1,11 +1,21 @@
 const mongoose = require('mongoose');
-const connection = require('../config/connection');
+const dotenv = require('dotenv');
 const { User, Thought } = require('../models');
+const connection = require('../config/connection');
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/socialnetworkDB', {
-    userNewUrlParser: true,
-    useUnifiedTopology: true,
+dotenv.config();
+
+const connectDB = async () => {
+    try{
+        await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/socialnetworkDB', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
 });
+   console.log('Success! You are now connected.');
+    } catch (err) {
+        console.error('Error! Cannot connect to MongoDB', err);
+    }
+};
 
 const users = [
     { 
@@ -40,7 +50,7 @@ const thoughts = [
         username: 'Ronny77',
         reactions: [
             {
-                reaction: 'Agreed!',
+                reactionBody: 'Agreed!',
                 username: 'Andre456',
             },
         ],
@@ -50,11 +60,11 @@ const thoughts = [
         username: 'Fred33',
         reactions: [
             {
-                reaction: 'You are so lucky!',
+                reactionBody: 'You are so lucky!',
                 username: 'Jennifer123'
             },
             {
-                reaction: 'Lucky? How about the traffic here? Try being stuck in traffic under the sun!',
+                reactionBody: 'Lucky? How about the traffic here? Try being stuck in traffic under the sun!',
                 username: 'Ronny77',
             },
         ],
@@ -64,11 +74,11 @@ const thoughts = [
         username: 'AaronSparxx',
         reactions: [
             {
-                reaction: 'Basketball is life!',
+                reactionBody: 'Basketball is life!',
                 username: 'Dion33',
             },
             {
-                reaction: 'I prefer soccer over basketball any day!',
+                reactionBody: 'I prefer soccer over basketball any day!',
                 username: 'Fred33',
             },
         ],
@@ -78,11 +88,11 @@ const thoughts = [
         username: 'Jennifer123',
         reactions: [
             {
-                reaction: 'The one that has the Coming Soon sign on 1st street?',
+                reactionBody: 'The one that has the Coming Soon sign on 1st street?',
                 username: 'Dion33',
             },
             {
-                reaction: 'Yes! It is so close to my house and I\'m so excited!',
+                reactionBody: 'Yes! It is so close to my house and I\'m so excited!',
                 username: 'Jennifer123',
             },
         ],
@@ -92,45 +102,43 @@ const thoughts = [
         username: 'Andre456',
         reactions: [
             {
-                reaction: 'Yes! Me too!',
+                reactionBody: 'Yes! Me too!',
                 username: 'Fred33',
             },
         ],
     },
-    {   thoughtText: 'I cannot wait for that new Mediterranean restaurant to open by my house!',
-        username: 'Jennifer123',
-        reactions: [
-            {
-                reaction: 'The one that has the Coming Soon sign on 1st street?',
-                username: 'Dion33',
-            },
-            {
-                reaction: 'Yes! It is so close to my house and I\'m so excited!',
-                username: 'Jennifer123',
-            },
-    ],
-}
 ];
 
 console.log(connection);
 
-connection.once('open', async() => {
-    console.log('Success! You are now connected.');
+connection.once('open', async () => {
+    try {
+        await User.deleteMany({});
+        await Thought.deleteMany({});
+  
+const insertedUsers = await User.insertMany(users);
 
-    await User.deleteMany();
-    await Thought.deleteMany();
-
-    const users = await User.insertMany(users);
-
-    thought.forEach(async thought => {
-        thought.username = users.find(user => user.username === thought.username)._id;
-        thought.reactions.forEach(reaction => {
-            reaction.username = users.find(user => user.username === reaction.username)._id;
-        });
+const updatedThoughts = thoughts.map(thought => {
+    const user = insertedUsers.find(user => user.username === thought.username);
+    thought.username = user._id;
+    thought.reactions = thought.reactions.map(reaction => {
+        const reactionUser = insertedUser.find(user => user.username === reaction.username);
+        return {
+            ...reaction,
+            username: reactionUser._id,
+        };
     });
-    
-    await Thought.insertMany(thoughts);
-        console.table(users);
+    return thought;
+});
+
+    await Thought.insertMany(updatedThoughts);
+        console.table(insertedUsers);
         console.info('Success! Seeding is now completed.');
             process.exit(0);
+} catch (err) {
+    console.error('Error. Seeding was not completed:', err);
+    process.exit(1);
+} finally {
+    mongoose.connection.close();
+}
 });
