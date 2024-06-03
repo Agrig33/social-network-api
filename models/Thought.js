@@ -12,7 +12,6 @@ const reactionSchema = new mongoose.Schema(
             type: String,
             required: true,
             maxlength: 280,
-            minlength: 1,
         },
         username: {
             type: String,
@@ -21,10 +20,10 @@ const reactionSchema = new mongoose.Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            get: (createdAtVal) => moment(createdAtVal).format('MM, DD, YYYY [at] hh:mm a'),
+            get: (createdAtVal) => moment(createdAtVal).format('MM/DD/YYYY [at] hh:mm a'),
         },
-        },
-        {
+    },
+    {
         toJSON: {
             getters: true,
         },
@@ -32,7 +31,7 @@ const reactionSchema = new mongoose.Schema(
     }
 );
 
-const thoughtShema = new mongoose.Schema(
+const thoughtSchema = new mongoose.Schema(
     {
         thoughtText: {
             type: String,
@@ -59,9 +58,9 @@ const thoughtShema = new mongoose.Schema(
     }
 );
 
-// thoughtShema.virtual('reactionCount').get(function() {
-//     return this.reactions.length;
-// });
+thoughtShema.virtual('reactionCount').get(function() {
+    return this.reactions.length;
+});
     
 const Thought = mongoose.model('Thought', thoughtSchema);
 
