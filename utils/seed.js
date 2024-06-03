@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 const connection = require('../config/connection');
 const { User, Thought } = require('../models');
 
-mongoose.connect(process.env.MONGODB_URI || )//-----add mongo connection
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/socialnetworkDB', {
+    userNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
 const users = [
     { 

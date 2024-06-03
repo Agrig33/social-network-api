@@ -1,37 +1,7 @@
-const { Schema, model, Types } = require('mongoose');
+const { Schema } = require('mongoose');
 const mongoose = require('mongoose');
 const moment = require('moment');
 
-const reactionSchema = new Schema(
-    {
-        reactionId: {
-            type: Schema.Types.ObjectId,
-            default: () => new Types.ObjectId(),
-        },
-        reactionBody: {
-            type: String,
-            required: true,
-            maxlength: 280,
-            minlength: 1
-        },
-        username: {
-            type: String,
-            required: true
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now,
-            get: (createdAtVal) => moment(createdAtVal).format('MM, DD, YYYY [at] hh:mm')
-        }
-        },
-        {
-        toJSON: {
-            getters: true,
-        },
-        id: false,
-        }
-    );
-    
 const thoughtShema = new Schema(
     {
         thoughtText: {
@@ -43,27 +13,37 @@ const thoughtShema = new Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            get: (createdAtVal) => 
-                moment(createdAtVal).format('MM, DD, YYYY [at] hh:mm'),
+            get: (createdAtVal) => moment(createdAtVal).format('MM, DD, YYYY [at] hh:mm a'),
         },
         username: {
             type: String,
             required: true,
         },
-        reactions: [reactionSchema],
+        reactions: [
+            {
+                reactionBody: {
+                    type: String,
+                    required: true,
+                    maxlength: 280,
+                
+            },
+            username: {
+                type: String,
+                required: true,
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now,
+                get: (createdAtVal) => moment(createdAtVal).format('MM, DD, YYYY [at] hh:mm a'),
+            },
     },
+],
+ },
     {
-        toJSON: {
-            getters: true,
-        },
-        id: false,
-    }
-);
+        toJSON: { getters: true },
+        toObject: { getters: true },
+    });
 
-thoughtSchema.virtual('formattedCreatedAt').get(function () {
-    return this.reactions.length;
-});
-
-const Thought = mongoose.model('Thought', reactionSchema, thoughtSchema);
+const Thought = mongoose.model('Thought', thoughtSchema);
 
 module.export = Thought;
