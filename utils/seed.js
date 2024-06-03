@@ -31,7 +31,7 @@ const users = [
     }
 ];
 
-const thoughtData = [
+const thoughts = [
     {
         thoughtText: 'Coding is so much fun!',
         username: 'Ronny77',
@@ -97,29 +97,37 @@ const thoughtData = [
     {   thoughtText: 'I cannot wait for that new Mediterranean restaurant to open by my house!',
         username: 'Jennifer123',
         reactions: [
-        {
-            reaction: 'The one that has the Coming Soon sign on 1st street?',
-            username: 'Dion33',
-        },
-        {
-            reaction: 'Yes! It is so close to my house and I\'m so excited!',
-            username: 'Jennifer123',
-        },
+            {
+                reaction: 'The one that has the Coming Soon sign on 1st street?',
+                username: 'Dion33',
+            },
+            {
+                reaction: 'Yes! It is so close to my house and I\'m so excited!',
+                username: 'Jennifer123',
+            },
     ],
 }
 ];
-
 
 console.log(connection);
 
 connection.once('open', async() => {
     console.log('Success! You are now connected.');
 
-    await User.deleteMany({});
+    await User.deleteMany();
+    await Thought.deleteMany();
 
-    await User.collection.insertMany(users);
-    console.table(users);
-        console.info('Success! It is now completed.');
-        process.exit(0);
+    const users = await User.insertMany(users);
+
+    thought.forEach(async thought => {
+        thought.username = users.find(user => user.username === thought.username)._id;
+        thought.reactions.forEach(reaction => {
+            reaction.username = users.find(user => user.username === reaction.username)._id;
+        });
+    });
+    
+    await Thought.insertMany(thoughts);
+        console.table(users);
+        console.info('Success! Seeding is now completed.');
+            process.exit(0);
 });
-
