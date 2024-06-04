@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
-// const { Schema } = mongoose;
+const { Schema } = mongoose;
 
 const reactionSchema = new mongoose.Schema(
     {
@@ -21,6 +21,7 @@ const reactionSchema = new mongoose.Schema(
             type: Date,
             default: Date.now,
             get: (createdAtVal) => moment(createdAtVal).format('MM/DD/YYYY [at] hh:mm a'),
+            // get: (timestamp) => new Date(timestamp).toLocaleDateString(),
         },
     },
     {
@@ -28,8 +29,7 @@ const reactionSchema = new mongoose.Schema(
             getters: true,
         },
         id: false,
-    }
-);
+    });
 
 const thoughtSchema = new mongoose.Schema(
     {
@@ -43,6 +43,7 @@ const thoughtSchema = new mongoose.Schema(
             type: Date,
             default: Date.now,
             get: (createdAtVal) => moment(createdAtVal).format('MM, DD, YYYY [at] hh:mm a'),
+            // get: (timestamp) => new Date(timestamp).toLocaleDateString(),
         },
         username: {
             type: String,
@@ -52,16 +53,16 @@ const thoughtSchema = new mongoose.Schema(
        },   
        {
         toJSON: {
+            virtuals: true,
             getters: true,
         },
         id: false,
-    }
-);
+    });
 
-thoughtShema.virtual('reactionCount').get(function() {
+thoughtSchema.virtual('reactionCount').get(function() {
     return this.reactions.length;
 });
     
 const Thought = mongoose.model('Thought', thoughtSchema);
 
-module.export = Thought;
+module.exports = Thought;

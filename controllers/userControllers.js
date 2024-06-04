@@ -1,18 +1,34 @@
-const { Thought, User } = require('../models');
+const mongoose = require('mongoose');
+const { User } = require('../models/User');
 
-module.exports = {
-    async getAllUsers(req, res) {
+// module.exports = {
+    const getAllUsers = async (req, res) => {
         try {
+            const { userId } = req.params;
+            if (!mongoose.Types.ObjectId.isValid(userId)) {
             const users = await User.find().populate('thoughts', 'friends');
-            return res.status(200).json(users);
-
-        } catch (err) {
-            console.log(err);
-            return res.status(500).json(err);
+            // return res.status(200).json(users);
+            return res.status(400).json({ message: 'Error. Invalid user ID format' });
         }
-    },
 
-    async getSingleUser(req, res) {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'Error. User cannot be found' });
+        }
+
+        return res.json(user);
+        } catch (err) {
+            // console.log(err);
+            // return res.status(500).json(err);
+            return res.status(500).json({ message: 'Oops, there was an error retrieving the user.', error: err.message });
+        }
+    };
+
+    // module.exports = {
+    //     getAllUsers,
+    // };
+
+    const getSingleUser = async (req, res) => {
         try {
             const user = await User.findOne({ _id: req.params.userId }).populate('thoughts');
             if (!user) {
@@ -23,9 +39,9 @@ module.exports = {
             console.log(err);
             return res.status(500).json(err);
         }
-    },
+    };
 
-    async createNewUser(req, res) {
+    const createNewUser = async (req, res) => {
         try {
             const user = await User.create(req.body);
             res.json(user);
@@ -33,9 +49,9 @@ module.exports = {
             console.log(err);
             return res.status(500).json(err);
         }
-    },
+    };
 
-    async deleteUser(req, res) {
+    const deleteUser = async (req, res) => {
         try {
             const user = await User.findOneAndDelete({ _id: req.params.userId});
             if (!user) {
@@ -47,14 +63,14 @@ module.exports = {
             console.log(err);
             return res.status(500).json(err);
         }
-    },
+    };
 
-    async updateUser(req, res) {
+    const updateUser = async (req, res) => {
         try {
             const user = await User.findOneAndUpdate(
                 { _id: req.params.userId },
                 { $set: req.body },
-                { runvalidators: true, new: true });
+                { runvalidator: true, new: true });
             if (!user) {
                 return res.status(404).json({ message: 'Error, no user found with that ID.'});
             }
@@ -63,14 +79,14 @@ module.exports = {
             console.log(err);
             return res.status(500).json(err);
         }
-    },
+    };
 
-    async addFriend(req, res) {
+    const addFriend = async (req, res) => {
         try{
             const friend = await User.findOneAndUpdate(
                 { _id: req.params.friendId },
                 { $addToSet: { friends: req.params.friendId}},
-                {runvalidators: true, new: true});
+                {runvalidator: true, new: true});
             if (!friend) {
                 return res.status(404).json({ message: 'Error, no friend found with that ID.'});
             }
@@ -79,14 +95,14 @@ module.exports = {
             console.log(err);
             return res.status(500).json(err);
         }
-    },
+    };
 
-    async deleteFriend(req, res) {
+    const deleteFriend = async (req, res) => {
         try {
             const friend = await User.findOneAndUpdate(
                 { _id: req.params.userId },
                 { $pull: { friends: req.params.friendId }}, 
-                {runvalidators: true, new: true});
+                {runvalidator: true, new: true});
             if (!friend) {
                 return res.status(404).json({ message: 'Error, there was no friend found with that ID.'});
             }
@@ -95,5 +111,14 @@ module.exports = {
             console.log(err);
             return res.status(500).json(err);
         }
-    }
-};
+    };
+
+    module.exports = {
+        getAllUsers,
+        getSingleUser,
+        createNewUser,
+        deleteUser,
+        updateUser,
+        addFriend,
+        deleteFriend
+    };
