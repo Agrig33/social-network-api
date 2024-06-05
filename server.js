@@ -7,14 +7,15 @@ const { User, Thought } = require('./models');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-connectDB();
+// connectDB();
 
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 
 app.use(routes);
 
-connectDB.once('open', () => {
+connectDB().then(() => {
     console.log('Success! You are now connected to MongoDB');
     
     app.listen(PORT, () => {

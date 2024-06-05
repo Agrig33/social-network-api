@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
+// const dotenv = require('dotenv');
 const { connect, connection } = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/socialnetworkDB');
-dotenv.config();
+// mongoose.connect('mongodb://localhost:27017/socialnetworkDB');
+// dotenv.config();
 
 const connectDB = async () => {
     try {
