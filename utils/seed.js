@@ -1,21 +1,28 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const { User, Thought } = require('../models');
-const connection = require('../config/connection');
+const { User, Thought } = require('../data');
+// const connection = require('../config/connection');
 
 dotenv.config();
 
-const connectDB = async () => {
-    try{
-        await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/socialnetworkDB', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/socialnetworkDB', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
 });
-   console.log('Success! You are now connected.');
-    } catch (err) {
-        console.error('Error! Cannot connect to MongoDB', err);
-    }
-};
+
+// const connectDB = async () => {
+//     try{
+//         await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/socialnetworkDB', {
+//         useNewUrlParser: true,
+//         useUnifiedTopology: true,
+// });
+//    console.log('Success! You are now connected.');
+//     } catch (err) {
+//         console.error('Error! Cannot connect to MongoDB', err);
+//     }
+// };
 
 const users = [
     { 
@@ -109,36 +116,46 @@ const thoughts = [
     },
 ];
 
-console.log(connection);
+// console.log(connection);
 
-connection.once('open', async () => {
+const seedDatabase = async () => {
     try {
-        await User.deleteMany({});
-        await Thought.deleteMany({});
+        await User.deleteMany();
+        await Thought.deleteMany();
   
-const insertedUsers = await User.insertMany(users);
+const users = await User.insertMany(users);
 
-const updatedThoughts = thoughts.map(thought => {
-    const user = insertedUsers.find(user => user.username === thought.username);
-    thought.username = user._id;
-    thought.reactions = thought.reactions.map(reaction => {
-        const reactionUser = insertedUser.find(user => user.username === reaction.username);
-        return {
-            ...reaction,
-            username: reactionUser._id,
-        };
+// // const updatedThoughts = thoughts.map(thought => {
+//     const user = insertedUsers.find(user => user.username === thought.username);
+//     thought.username = user._id;
+//     thought.reactions = thought.reactions.map(reaction => {
+//         const reactionUser = insertedUser.find(user => user.username === reaction.username);
+//         return {
+//             ...reaction,
+//             username: reactionUser._id,
+//         };
+//     });
+//     return thought;
+// });
+
+thoughts.forEach(async thought => {
+    thought.username = users.find(user => user.username === thought.username)._id;
+    thought.reactions.forEach(reaction => {
+        reaction.username = users.find(user => user.username === reaction.username)._id;
     });
-    return thought;
 });
 
-    await Thought.insertMany(updatedThoughts);
-        console.table(insertedUsers);
-        console.info('Success! Seeding is now completed.');
-            process.exit(0);
+    await Thought.insertMany(thoughts);
+        console.log('Success! Seeding is now completed.');
+        // console.table(insertedUsers);
+        // console.info('Success! Seeding is now completed.');
+        process.exit(0);
 } catch (err) {
     console.error('Error. Seeding was not completed:', err);
     process.exit(1);
 } finally {
     mongoose.connection.close();
 }
-});
+};
+
+seedDatabase();

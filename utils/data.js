@@ -13,6 +13,11 @@ const reactionSchema = new Schema({
         minlength: 1,
         maxlength: 280,
     },
+    username: {
+        type: String,
+        required: true,
+    },
+
     createdAt: {
         type: Date,
         default: Date.now,
@@ -34,18 +39,19 @@ const thoughtSchema = new Schema(
             required: true,
             minlength: 1,
             maxlength: 280,
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now,
-            get: (createdAtVal) => moment(createdAtVal).format('MM, DD, YYYY [at] hh:mm a'),
+        
         },
         username: {
             type: String,
             required: true,
         },
         reactions: [reactionSchema],
+        createdAt: {
+            type: Date,
+            default: Date.now,
+            get: (createdAtVal) => moment(createdAtVal).format('MM, DD, YYYY [at] hh:mm a'),
        },   
+    },
        {
         toJSON: {
             virtuals: true,
@@ -68,14 +74,15 @@ const thoughtSchema = new Schema(
             },
             email: {
                 type: String,
-                unique: [true, 'Try again. Email already in use.'],
                 required: [true, 'Error, email cannot be blank.'],
+                unique: [true, 'Try again. Email already in use.'],
                 unique: true,
                 match: [/^([a-zA-Z0-9.-_]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})$/, 'Please use a valid email address'],
             },
-            thoughts: [{
+            thoughts: [
+            {
                 type: Schema.Types.ObjectId,
-                ref: 'Thought'
+                ref: 'Thought',
             },
         ],
             friends: [
@@ -88,6 +95,7 @@ const thoughtSchema = new Schema(
         {
             toJSON: {
                 virtuals: true,
+                getters: true,
             },
             id: false,
         });
