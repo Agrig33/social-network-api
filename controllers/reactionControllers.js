@@ -1,6 +1,6 @@
 const {Thought} = require('../models');
 
-const reactionController = {
+const reactionControllers = {
     async addAReaction(req, res) {
     try {
         const thought = await Thought.findOneAndUpdate(
@@ -42,4 +42,4 @@ async deleteReaction(req, res) {
 },
 };
 
-module.exports = reactionController;
+module.exports = reactionControllers;
