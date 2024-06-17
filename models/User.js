@@ -1,4 +1,7 @@
-const { Schema , model } = require('mongoose');
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+// const { Schema , model } = require('mongoose');
 
 
 const userSchema = new Schema(
@@ -11,26 +14,24 @@ const userSchema = new Schema(
         },
         email: {
             type: String,
-            unique: [true, 'Try again. Email already in use.'],
             required: [true, 'Error, email cannot be blank.'],
-            unique: true,
+            unique: [true, 'Try again. Email already in use.'],
             match: [/^([a-zA-Z0-9.-_]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})$/, 'Please use a valid email address'],
         },
-        thoughts: [{
+        thougtData: [{
             type: Schema.Types.ObjectId,
             ref: 'Thought'
-        },
-    ],
+        }],
+
         friends: [
         {
             type: Schema.Types.ObjectId,
             ref: 'User',
-        },
-    ],
+        }]
     },
     {
         toJSON: {
-            virtuals: true,
+            getters: true,
         },
         id: false,
     });
@@ -39,6 +40,6 @@ const userSchema = new Schema(
     return this.friends.length;
    });
 
-const User = model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

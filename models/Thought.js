@@ -1,6 +1,11 @@
-const { Schema, model } = require('mongoose');
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 const reactionSchema = require('./Reaction');
-const moment = require('moment');
+
+
+// const { Schema, model } = require('mongoose');
+// const reactionSchema = require('./Reaction');
+// const moment = require('moment');
 
 const thoughtSchema = new Schema(
     {
@@ -29,10 +34,10 @@ const thoughtSchema = new Schema(
         id: false,
     });
 
-thoughtSchema.virtual('reactionCount').get(function() {
-    return this.reactions.length;
+thoughtSchema.virtual('formattedCreatedAt').get(function() {
+    return this.createdAt.toLocaleString();
 });
     
-const Thought = model('Thought', thoughtSchema);
+const Thought = mongoose.model('Thought', thoughtSchema);
 
 module.exports = Thought;

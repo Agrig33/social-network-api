@@ -1,7 +1,7 @@
 # Social-Network-Api [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Description
-This API  is mad for a social network application where users are able to create, read, update and delete. Users are able to create a friend list, post comments, share their thoughts and get reactions. 
+This API  is made for a social network application where users are able to create, read, update and delete. Users are able to create a friend list, post comments, share their thoughts and get reactions. 
 
 ## Table of Contents
 

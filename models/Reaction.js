@@ -1,11 +1,14 @@
-const { Schema, Types } = require('mongoose');
-const moment = require('moment');
+// const { Schema, Types } = require('mongoose');
+// const moment = require('moment');
+
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const reactionSchema = new Schema(
     {
         reactionId: {
             type: Schema.Types.ObjectId,
-            default: () => new Types.ObjectId()
+            default: () => new mongoose.Types.ObjectId()
         },
         reactionBody: {
             type: String,
@@ -20,15 +23,19 @@ const reactionSchema = new Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            get: (createdAtVal) => moment(createdAtVal).format('MM, DD, YYYY [at] hh:mm'),
+            // get: (createdAtVal) => moment(createdAtVal).format('MM, DD, YYYY [at] hh:mm'),
         }
-        },
-        {
-        toJSON: {
-            getters: true,
-        },
-        id: false,
-        }
-    );
+        });
+
+        reactionSchema.path('createdAt').get(function(value) {
+            return value.toLocaleString();
+        });
+        
+    //     toJSON: {
+    //         getters: true,
+    //     },
+    //     id: false,
+    //     }
+    // );
 
     module.exports = reactionSchema;
