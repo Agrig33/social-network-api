@@ -5,7 +5,7 @@ const reactionControllers = {
     try {
         const thought = await Thought.findOneAndUpdate(
             { _id: req.params.thoughtId },
-            { $addToSet: {reactions: req.body }},
+            { $addToSet: { reactions: req.body }},
            
         );
     // const thoughtId = req.params.thoughtId;
@@ -34,10 +34,10 @@ async deleteReaction(req, res) {
     thought.reactions = thought.reactions.filter(reaction => reaction._id.toString() !== reactionId);
         await thought.save();
 
-        return res.json(thought);
+       res.json(thought);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: 'Oops, there was an error deleting the reaction.', err });
+        return res.status(500).json({ message: 'Oops, there was an error deleting the reaction.'});
     }
 },
 };

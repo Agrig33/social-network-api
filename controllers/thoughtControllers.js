@@ -1,6 +1,5 @@
-// const { ObjectId } = require('mongoose').Types;
+const { ObjectId } = require('mongoose').Types;
 const { Thought, User, Reaction } = require('../models');
-// const { get } = require('../models/Reaction');
 
     // const thoughtCon = {
     module.exports = {
@@ -8,30 +7,28 @@ const { Thought, User, Reaction } = require('../models');
             try {
             const thoughts = await Thought.find();
             // return res.status(200).json(thoughts);
-            // const thoughtObj ={
-            //     thoughtData,
-            // };
+            const thoughtObj ={
+                thoughtData,
+            };
         
-            res.json(thoughts);
+            res.json(thoughtObj);
     } catch (err) {
             console.log(err);
-            res.status(500).json({ message: 'Oops, there was an error retrieving thoughts.', err });
+            res.status(500).json({ message: 'Oops, there was an error retrieving thoughts.'});
         }
     },
-    // module.exports = { 
-    //     getAllThoughts,
 
 async getSingleThought(req, res) {
     try {
         const thought = await Thought.findOne({ _id: req.params.thoughtId });
       
         if (!thought) {
-            // return res.status(200).json(thought); //this is new
+            // return res.status(200).json(thought); //
             res.status(404).json({ message: 'Error, no thought found with that ID.'});
         }
-        res.json(
+        res.json({
             thought,
-        );
+       });
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: 'Oops, there was an error retrieving a thought.', err });
@@ -42,16 +39,18 @@ async getSingleThought(req, res) {
 
 async createThought(req, res) {
     try {
-        const thoughtData = await Thought.create(req.body);
+        const thought = await Thought.create(req.body);
         const user = await User.findOneAndUpdate(
             { _id: req.body.userId },
-            { $push: { thoughts: thoughtData._id }},
+            { $addToSet: { thoughtdata: thought._id }},
             { new: true });
 
         if (!user) {
-        res.status(404).json({ message: 'Error, user was not found.'});
+        res.status(404).json({ message: 'Error, user was not found.',
+
+        })
     }
-        res.json({ user: user.username, thought: thoughtData});
+        res.json(thought);
         // ({ message: 'Success! Thought was created successfully!'}); 
      } catch (err) {
         console.log(err);
@@ -79,25 +78,25 @@ async updateThought(req, res) {
 
 async deleteThought(req, res) {
     try {
-        const thought = await Thought.findByIdAndDelete(req.params.thoughtId);
+        const thought = await Thought.findOneAndRemove({ _id: req.params.thoughtId });
 
     if (!thought) {
             return res.status(404).json({ message: 'Error, no thought found with that ID.'});
         }
         
-        // const userData = await User.findOneAndUpdate(
-        //     { thoughtData: req.params.thoughtId },
-        //     { $pull: { thoughtData: req.params.thoughtId }},
-        //     { new: true }
-        // );
+        const userData = await User.findOneAndUpdate(
+            { thoughtData: req.params.thoughtId },
+            { $pull: { thoughtData: req.params.thoughtId }},
+            { new: true }
+        );
         
-    // if(!userData) {
-    //     return res.status(404).json({ message: 'Error, user was not found.' });
-    // }
+    if(!userData) {
+        return res.status(404).json({ message: 'Error, user was not found.' });
+    }
         res.json({ message: 'Success! Thought has been deleted.'});
     } catch (err) {
         console.log(err);
         return res.status(500).json({ message: 'Oops, there was an error deleting the thought.', err });
     }
-}
-    }
+},
+    };
