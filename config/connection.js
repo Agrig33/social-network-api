@@ -9,9 +9,9 @@ const { connect, connection } = require('mongoose');
 // const connectDB = async () => {
 //     try {
 //         await 
-//         mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/socialnetworkDB',{
-//             userNewUrlParser: true,
-//             useUnifiedTopology: true,
+        // mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/socialnetworkDB',{
+        //     userNewUrlParser: true,
+        //     useUnifiedTopology: true,
 //         });
 //             console.log('Success! You are now connected to MongoDB.');
 //     } catch (err) {
