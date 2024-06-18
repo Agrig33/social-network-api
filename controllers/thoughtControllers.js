@@ -1,12 +1,11 @@
 const { ObjectId } = require('mongoose').Types;
 const { Thought, User, Reaction } = require('../models');
 
-    // const thoughtCon = {
     module.exports = {
         async getAllThoughts(req, res) {
             try {
             const thoughts = await Thought.find();
-            // return res.status(200).json(thoughts);
+
             const thoughtObj ={
                 thoughtData,
             };
@@ -34,8 +33,6 @@ async getSingleThought(req, res) {
         res.status(500).json({ message: 'Oops, there was an error retrieving a thought.', err });
     }
 },
-// module.exports = { 
-//     getSingleThought,
 
 async createThought(req, res) {
     try {
@@ -51,7 +48,7 @@ async createThought(req, res) {
         })
     }
         res.json(thought);
-        // ({ message: 'Success! Thought was created successfully!'}); 
+
      } catch (err) {
         console.log(err);
         res.status(500).json({ message: 'Oops, there was an error creating the thought.', err });

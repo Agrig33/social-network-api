@@ -8,8 +8,7 @@ const reactionControllers = {
             { $addToSet: { reactions: req.body }},
            
         );
-    // const thoughtId = req.params.thoughtId;
-    // const thought = await Thought.findById(thoughtId);
+
 
     if (!thought) {
         return res.status(404).json({ message: 'Error, there was no thought found with that ID.'});

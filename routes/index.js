@@ -9,13 +9,6 @@ router.use('/api/reactions', reactionRoutes);
 router.use('/api/thoughts', thoughtRoutes);
 router.use('/api/users', userRoutes);
 
-
-// const express = require('express');
-// const router = express.Router();
-// const apiRoutes = require('./api');
-
-// router.use('/api', apiRoutes);
-
 router.use((req, res) => res.send('Oops! This is the wrong route.'));
 
     

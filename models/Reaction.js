@@ -1,6 +1,3 @@
-// const { Schema, Types } = require('mongoose');
-// const moment = require('moment');
-
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
@@ -23,7 +20,7 @@ const reactionSchema = new Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            // get: (createdAtVal) => moment(createdAtVal).format('MM, DD, YYYY [at] hh:mm'),
+
         }
         });
 
@@ -31,11 +28,6 @@ const reactionSchema = new Schema(
             return value.toLocaleString();
         });
         
-    //     toJSON: {
-    //         getters: true,
-    //     },
-    //     id: false,
-    //     }
-    // );
+   
 
     module.exports = reactionSchema;

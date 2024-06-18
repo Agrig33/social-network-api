@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const { User, Thought } = require('../data');
-// const connection = require('../config/connection');
+
 
 dotenv.config();
 
@@ -12,17 +12,6 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/socialnet
     useFindAndModify: false,
 });
 
-// const connectDB = async () => {
-//     try{
-//         await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/socialnetworkDB', {
-//         useNewUrlParser: true,
-//         useUnifiedTopology: true,
-// });
-//    console.log('Success! You are now connected.');
-//     } catch (err) {
-//         console.error('Error! Cannot connect to MongoDB', err);
-//     }
-// };
 
 const users = [
     { 
@@ -116,7 +105,6 @@ const thoughts = [
     },
 ];
 
-// console.log(connection);
 
 const seedDatabase = async () => {
     try {
@@ -124,19 +112,6 @@ const seedDatabase = async () => {
         await Thought.deleteMany();
   
 const users = await User.insertMany(users);
-
-// // const updatedThoughts = thoughts.map(thought => {
-//     const user = insertedUsers.find(user => user.username === thought.username);
-//     thought.username = user._id;
-//     thought.reactions = thought.reactions.map(reaction => {
-//         const reactionUser = insertedUser.find(user => user.username === reaction.username);
-//         return {
-//             ...reaction,
-//             username: reactionUser._id,
-//         };
-//     });
-//     return thought;
-// });
 
 thoughts.forEach(async thought => {
     thought.username = users.find(user => user.username === thought.username)._id;
@@ -147,8 +122,7 @@ thoughts.forEach(async thought => {
 
     await Thought.insertMany(thoughts);
         console.log('Success! Seeding is now completed.');
-        // console.table(insertedUsers);
-        // console.info('Success! Seeding is now completed.');
+
         process.exit(0);
 } catch (err) {
     console.error('Error. Seeding was not completed:', err);

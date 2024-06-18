@@ -3,13 +3,8 @@ const { User, Thought } = require('../models');
 
 module.exports = {
     async getAllUsers(req, res) {
-        // try {
             const userData = await User.find().populate('thoughtData');
             return res.json(userData);
-        // } catch (err) {
-        //     console.log(err);
-        //     return res.status(500).json({ message: 'Oops, there was an error retrieving the user.', err });
-        // }
     },
 
     async getSingleUser(req, res) {
