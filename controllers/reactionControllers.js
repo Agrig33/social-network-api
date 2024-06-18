@@ -6,8 +6,11 @@ const reactionControllers = {
         const thought = await Thought.findOneAndUpdate(
             { _id: req.params.thoughtId },
             { $addToSet: {reactions: req.body }},
-            // { runValidators: true, new: true });
+           
         );
+    // const thoughtId = req.params.thoughtId;
+    // const thought = await Thought.findById(thoughtId);
+
     if (!thought) {
         return res.status(404).json({ message: 'Error, there was no thought found with that ID.'});
         }
@@ -23,9 +26,6 @@ async deleteReaction(req, res) {
         const { thoughtId, reactionId } = req.params;
         
         const thought = await Thought.findById(thoughtId);
-            // { _id: req.params.thoughtId },
-            // { $pull: { reactions: {reactionId: req.params.reactionId} }},
-            // { runValidators: true, new: true });
 
     if (!thought) {
         return res.status(404).json({ message: 'Error, there was no thought found with that ID.'});
